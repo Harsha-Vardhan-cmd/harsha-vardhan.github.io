@@ -118,14 +118,95 @@
   /* HERO */
   #hero {
     min-height: 100vh;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto;
     align-items: center;
     padding: 120px 60px 60px;
     position: relative;
     z-index: 1;
+    gap: 40px;
   }
 
   .hero-inner { max-width: 900px; }
+
+  /* HERO PHOTO — FLOATING CUTOUT */
+  .hero-photo {
+    position: relative;
+    width: 340px;
+    height: 440px;
+    opacity: 0;
+    animation: heroFloat 0.8s 1s forwards, float 6s 2s ease-in-out infinite;
+    align-self: center;
+  }
+
+  .hero-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    border-radius: 0;
+    filter: contrast(1.1) brightness(1.05);
+    transition: filter 0.4s, transform 0.4s;
+    position: relative;
+    z-index: 2;
+    mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
+  }
+
+  .hero-photo:hover img {
+    filter: contrast(1.15) brightness(1.1);
+    transform: translateY(-6px);
+  }
+
+  /* Neon glow behind the photo */
+  .hero-photo::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    height: 60%;
+    background: radial-gradient(ellipse, rgba(0,255,157,0.25) 0%, rgba(0,200,255,0.15) 40%, transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+    filter: blur(40px);
+    transition: all 0.4s;
+  }
+
+  .hero-photo:hover::before {
+    width: 80%;
+    height: 70%;
+    background: radial-gradient(ellipse, rgba(0,255,157,0.35) 0%, rgba(0,200,255,0.2) 40%, transparent 70%);
+    filter: blur(50px);
+  }
+
+  /* Subtle scan line across the photo */
+  .hero-photo::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(0,255,157,0.02) 3px,
+      rgba(0,255,157,0.02) 6px
+    );
+    z-index: 3;
+    pointer-events: none;
+    border-radius: 0;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  @keyframes heroFloat {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
 
   .hero-tag {
     font-family: 'Share Tech Mono', monospace;
@@ -213,20 +294,18 @@
   .btn-outline:hover { border-color: var(--neon-blue); box-shadow: var(--glow-blue); transform: translateY(-2px); }
 
   .hero-stats {
-    position: absolute;
-    right: 60px;
-    bottom: 80px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 30px;
+    margin-top: 50px;
     opacity: 0;
-    animation: fadeLeft 0.8s 1s forwards;
+    animation: fadeUp 0.8s 1s forwards;
   }
 
   .stat {
-    text-align: right;
-    border-right: 2px solid var(--neon-green);
-    padding-right: 20px;
+    text-align: left;
+    border-left: 2px solid var(--neon-green);
+    padding-left: 16px;
   }
   .stat-num {
     font-family: 'Syne', sans-serif;
@@ -805,7 +884,9 @@
     nav { padding: 16px 24px; }
     .nav-links { display: none; }
     #hero { padding: 100px 24px 60px; }
-    .hero-stats { display: none; }
+    #hero { grid-template-columns: 1fr; }
+    .hero-photo { display: none; }
+    .hero-stats { flex-wrap: wrap; gap: 20px; }
     section { padding: 70px 24px; }
     .about-grid { grid-template-columns: 1fr; gap: 40px; }
     footer { padding: 20px 24px; flex-direction: column; gap: 10px; text-align: center; }
@@ -835,7 +916,7 @@
 <!-- HERO -->
 <section id="hero">
   <div class="hero-inner">
-    <div class="hero-tag">// Security Engineer — UMD Cybersecurity MEng</div>
+    <div class="hero-tag">// Network Security Engineer — UMD Cybersecurity MEng</div>
     <h1 class="hero-name">
       <span class="line1 glitch" data-text="Harsha">Harsha</span>
       <span class="line2">Vardhan.</span>
@@ -850,25 +931,29 @@
       <a href="#experience" class="btn-primary">View Experience</a>
       <a href="mailto:harsha09@umd.edu" class="btn-outline">Get In Touch</a>
     </div>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">200+</div>
+        <div class="stat-label">Incidents Handled</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">10+</div>
+        <div class="stat-label">CTFs Competed</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">7</div>
+        <div class="stat-label">Certifications</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">100+</div>
+        <div class="stat-label">Enterprise Clients</div>
+      </div>
+    </div>
   </div>
 
-  <div class="hero-stats">
-    <div class="stat">
-      <div class="stat-num">200+</div>
-      <div class="stat-label">Incidents Handled</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">10+</div>
-      <div class="stat-label">CTFs Competed</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">7</div>
-      <div class="stat-label">Certifications</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">100+</div>
-      <div class="stat-label">Enterprise Clients</div>
-    </div>
+  <div class="hero-photo">
+    <img src="harsha.png" alt="Harsha Vardhan">
   </div>
 </section>
 
